@@ -1,1 +1,1 @@
-{"model_name": "ARIMA (Baseline)", "rmse": 7330.803803906474, "mae": 6087.555204074608}
+{"model_name": "ARIMA (Baseline)", "rmse": 7330.803803906474, "mae": 6087.555204074608, "mape": 7252599642221402.0}
