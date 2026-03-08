@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 import joblib
-from tensorflow.keras.models import load_model 
+from tensorflow.keras.models import load_model  # type: ignore
 
 # Import our helper function from utils.py
 from utils import prepare_input_data
