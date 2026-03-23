@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify
 import numpy as np
 import joblib
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model #type: ignore
 from statsmodels.tsa.arima.model import ARIMAResults
 from datetime import datetime 
 
@@ -26,7 +26,7 @@ try:
     # 3. Load ARIMA 
     arima_model = ARIMAResults.load(os.path.join(ARIMA_DIR, 'arima_model.pkl'))
     
-    print("✅ All 3 Models loaded successfully!")
+    print(" All 3 Models loaded successfully!")
 except Exception as e:
     print(f" Error loading one or more models: {e}")
 
