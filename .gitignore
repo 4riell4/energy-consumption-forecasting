@@ -14,3 +14,7 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Ignore massive Machine Learning model files
+*.pkl
+*.keras
