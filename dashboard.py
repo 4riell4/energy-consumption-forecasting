@@ -8,9 +8,7 @@ from PIL import Image
 
 st.set_page_config(page_title="Energy Forecaster", layout="wide")
 
-# Directory setup
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Check both potential results locations
 RESULTS_DIR = os.path.join(BASE_DIR, "results")
 ALT_RESULTS_DIR = os.path.join(BASE_DIR, "models", "results")
 
@@ -22,18 +20,14 @@ def find_file(filename):
     if os.path.exists(path2): return path2
     return None
 
-# ==========================================
 # SIDEBAR NAVIGATION
-# ==========================================
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to:",
     ["Home", "Generate Forecast", "Data Analytics & Patterns", "Model Evaluation"]
 )
 
-# ==========================================
-# PAGE 1: HOME
-# ==========================================
+# PAGE: HOME
 if page == "Home":
     st.title("The Energy Demand Forecaster")
     
@@ -44,19 +38,17 @@ if page == "Home":
     
     st.markdown("---")
     st.markdown("### Project Aim")
-    st.write("To design a predictive tool that applies recent advancements in data analytics and deep learning to address challenges of forecasting energy consumption. Accurate predictions are essential for grid management, cost reduction, and sustainability goals.")
+    st.write("This project focuses on building a tool to predict energy demand using modern data analytics and deep learning techniques. Being able to forecast demand accurately is important for managing the grid, reducing costs, and supporting sustainability efforts.")
 
     st.markdown("---")
     st.markdown("### Model Overview")
     st.write("""
-    * **ARIMA:** A statistical baseline that uses linear trends.
-    * **XGBoost:** A machine learning model using engineered features like rolling averages.
-    * **LSTM:** A deep learning model that learns complex temporal dependencies directly from sequences.
+    * **ARIMA:** A simple statistical model used as a baseline.
+    * **XGBoost:** A machine learning model that uses features like past values and trends.
+    * **LSTM:** A deep learning model that learns patterns directly from sequences over time.
     """)
 
-# ==========================================
-# PAGE 2: GENERATE FORECAST
-# ==========================================
+# PAGE: GENERATE FORECAST
 elif page == "Generate Forecast":
     st.title("Generate a Multi-Model Forecast")
     
@@ -75,38 +67,32 @@ elif page == "Generate Forecast":
                 response = requests.post('http://127.0.0.1:5000/predict', json={"features": features})
                 if response.status_code == 200:
                     res = response.json()
-                    # Visualizing Result Trend
                     st.markdown("### Forecast Visualization")
                     forecast_data = pd.DataFrame({
                         "Model": ["LSTM", "XGBoost", "ARIMA"],
                         "Predicted MW": [res['lstm_prediction_mw'], res['xgb_prediction_mw'], res['arima_prediction_mw']]
                     })
                     st.bar_chart(data=forecast_data, x="Model", y="Predicted MW", color="#4C72B0")
-                    #st.success("Predictions Generated")
                     c1, c2, c3 = st.columns(3)
-                    c1.metric("LSTM", f"{res['lstm_prediction_mw']:,.2f} MW")
-                    c2.metric("XGBoost", f"{res['xgb_prediction_mw']:,.2f} MW")
+                    c1.metric("XGBoost", f"{res['xgb_prediction_mw']:,.2f} MW")
+                    c2.metric("LSTM", f"{res['lstm_prediction_mw']:,.2f} MW")
                     c3.metric("ARIMA", f"{res['arima_prediction_mw']:,.2f} MW")
                     
                     st.markdown("### Explanation")
-                    st.write("These predictions represent the estimated energy demand for the next 30-minute interval. Differences arise from how each model interprets the trend: ARIMA looks at linear momentum, while LSTM analyzes the sequence of volatility.")
+                    st.write("These predictions estimate the energy demand for the next 30-minute period. Each model works a bit differently: ARIMA follows simple trends, XGBoost focuses on recent patterns in the data, and LSTM looks at the full sequence to pick up more complex behaviour.")
         except Exception as e:
             st.error(f"Connection Error: {e}")
 
-# ==========================================
-# PAGE 3: DATA ANALYTICS & PATTERNS
-# ==========================================
+# PAGE: DATA ANALYTICS & PATTERNS
 elif page == "Data Analytics & Patterns":
     st.title("Data Analytics & Patterns")
     st.info("Insights derived from the National Grid dataset (Jan 2009 - Feb 2025)")
 
-    # Helper for loading and plotting
     def plot_forecast_window(pred_file, actual_file, model_label, line_color):
         p_path = find_file(pred_file)
         a_path = find_file(actual_file)
         
         if p_path and a_path:
-            # Load 72 hours (144 half-hour steps)
             actuals = np.load(a_path)[:144].flatten()
             preds = np.load(p_path)[:144].flatten()
             
@@ -115,50 +101,44 @@ elif page == "Data Analytics & Patterns":
                 f"{model_label} Forecast": preds
             })
             
-            # Using Hex codes for guaranteed brightness
-            # Orange for Actual, Model-specific color for Forecast
             st.line_chart(df, color=["#FF8C00", line_color]) 
         else:
             st.warning(f"Data for {model_label} not found in results folder.")
 
-    # 1. ARIMA
+    # ARIMA
     st.markdown("### 1. ARIMA: Statistical Baseline (72-Hour Window)")
     col1, col2 = st.columns([2, 1])
     with col1:
         plot_forecast_window("arima_preds.npy", "actual_values.npy", "ARIMA", "#00BFFF")
     with col2:
         st.write("**Analysis:**")
-        st.write("The ARIMA model establishes a linear baseline. It captures the general cyclical trend but often 'smooths out' the sharp peaks, missing the high-volatility spikes seen in the orange Actual Demand line.")
+        st.write("ARIMA acts as a basic baseline. It follows the overall trend quite well, but tends to smooth out sharp peaks, so it misses some of the sudden spikes in demand.") 
 
     st.markdown("---")
 
-    # 2. XGBoost
+    # XGBoost
     st.markdown("### 2. XGBoost: Feature-Driven Performance (72-Hour Window)")
     col3, col4 = st.columns([2, 1])
     with col3:
         plot_forecast_window("xgb_preds.npy", "actual_values.npy", "XGBoost", "#32CD32")
     with col4:
         st.write("**Analysis:**")
-        st.write("By using specific time-lags, XGBoost reacts much faster to changes. Note how the green line tracks the orange actuals more closely during rapid morning ramps compared to the ARIMA model.")
-
+        st.write("Because it uses recent values as features, XGBoost responds more quickly to changes. You can see it follows the actual demand more closely, especially during sharp increases in the morning.")
     st.markdown("---")
 
-    # 3. LSTM
+    # LSTM
     st.markdown("### 3. LSTM: Deep Learning Sequence Performance (72-Hour Window)")
     col5, col6 = st.columns([2, 1])
     with col5:
         plot_forecast_window("lstm_preds.npy", "actual_values.npy", "LSTM", "#FF00FF")
     with col6:
         st.write("**Analysis:**")
-        st.write("The LSTM captures the 'momentum' of the grid. It shows the highest precision in following the intricate 'wiggles' of the orange line, especially during the evening peak demand periods.")
+        st.write("The LSTM does the best job at capturing patterns over time. It follows the smaller fluctuations more closely, especially during peak demand in the evening.")
 
-# ==========================================
-# PAGE 4: MODEL EVALUATION
-# ==========================================
+# PAGE: MODEL EVALUATION
 elif page == "Model Evaluation":
     st.title("Model Evaluation")
     
-    # Blue info box as requested
     st.info("Insights derived from the National Grid dataset (Jan 2009 - Feb 2025)")
 
     def load_metrics(m_name):
@@ -172,9 +152,8 @@ elif page == "Model Evaluation":
     l_m, x_m, a_m = load_metrics("lstm"), load_metrics("xgb"), load_metrics("arima")
 
     if l_m and x_m and a_m:
-        st.markdown("### 1. Performance Metrics Comparison (Table)")
+        st.markdown("### 1. Performance Metrics Comparison")
         
-        # Table for exact figures
         comparison_df = pd.DataFrame({
             "Metric": ["MAE (MW)", "RMSE (MW)", "MAPE (%)"],
             "LSTM": [l_m['mae'], l_m['rmse'], l_m['mape']*100],
@@ -184,7 +163,6 @@ elif page == "Model Evaluation":
         st.table(comparison_df)
 
         st.markdown("### 2. Model Performance Comparison: RMSE vs MAE vs MAPE")
-        # Creating three side-by-side columns to match Figure 141
         chart_col1, chart_col2, chart_col3 = st.columns(3)
         
         with chart_col1:
@@ -223,7 +201,6 @@ elif page == "Model Evaluation":
 
     st.markdown("---")
 
-    # 72-Hour Comparative Time-Series (The missing graph!)
     st.markdown("### 3. Time-Series Comparison: 72-Hour Demand Forecast")
     
     actual_p = find_file("actual_values.npy")
@@ -232,7 +209,6 @@ elif page == "Model Evaluation":
     arima_p = find_file("arima_preds.npy")
 
     if all([actual_p, lstm_p, xgb_p, arima_p]):
-        # Load 144 points (72 hours) for direct comparison
         combined_data = pd.DataFrame({
             "Actual Demand": np.load(actual_p)[:144].flatten(),
             "LSTM": np.load(lstm_p)[:144].flatten(),
@@ -255,7 +231,17 @@ elif page == "Model Evaluation":
     
     st.markdown("### Model Comparison Summary")
     st.write("""
-    * **LSTM:** Outperformed other models in RMSE by utilizing its internal memory cells to retain deep sequential dependencies across the 48-step input arrays[cite: 132, 144].
-    * **XGBoost:** Achieved the lowest overall MAPE by leveraging engineered temporal markers and sequence lags to capture non-linear relationships with high efficiency[cite: 101, 143].
-    * **ARIMA:** Limited by its inherent linearity, the baseline struggled to model multiple overlapping seasonalities without becoming computationally unfeasible[cite: 90, 167].
+    * **LSTM:** Best at handling complex patterns over time, especially large spikes in demand.
+    * **XGBoost:** Most consistent overall, with the lowest average error.
+    * **ARIMA:** Works as a simple baseline, but struggles with more complex and changing patterns.
     """)
+
+
+
+"""
+References:
+  https://docs.streamlit.io/
+  https://www.youtube.com/watch?v=p2pXpcXPoGk
+  https://medium.com/@verinamk/streamlit-for-beginners-build-your-first-dashboard-58b764a62a2d
+
+"""

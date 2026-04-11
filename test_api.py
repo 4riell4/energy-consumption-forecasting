@@ -1,6 +1,6 @@
 import requests
 
-# 1. Prepare exactly 48 dummy values (representing 24 hours of half-hourly energy demand in MW)
+# 48 dummy values 
 dummy_features = [
     32000, 31800, 31750, 31500, 31200, 31000, 30800, 30500, 
     30200, 30000, 29800, 29500, 29300, 29000, 28800, 28500, 
@@ -10,15 +10,14 @@ dummy_features = [
     29500, 30000, 30500, 31000, 31500, 32000, 32500, 33000
 ]
 
-# 2. Define the exact URL for the predict endpoint
+# Define the exact URL for the predict endpoint
 url = 'http://127.0.0.1:5000/predict'
 
-# 3. Package the data into a JSON dictionary exactly how app.py expects it
+# Package the data into a JSON dictionary 
 payload = {"features": dummy_features}
 
 print("Sending test request to Flask API...")
 
-# 4. Send the request and print the response
 try:
     response = requests.post(url, json=payload)
     
