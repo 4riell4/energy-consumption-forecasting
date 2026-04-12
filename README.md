@@ -11,6 +11,8 @@ The system consists of:
 - A Flask REST API backend for model inference  
 - A Streamlit dashboard frontend for user interaction  
 
+## OneDrive Link
+https://cityuni-my.sharepoint.com/:f:/g/personal/ariella_amor_city_ac_uk/IgCuVF2ZBLeXRa1MzAvbCpfNATFqYzLey1RMbJO4FuAn5qs?e=dhsgkJ 
 
 ## Project Structure
 
@@ -29,12 +31,13 @@ The repository is organised exactly as follows:
 Follow these steps to run the project locally:
 
 ### 1. Extract the Project
-Unzip the project folder and open it in your IDE or terminal.
+Download the project folder from the OneDrive link and open it in your IDE or terminal.
 
 ### 2. Prerequisites
-- Python **3.8+**
+- Python 3.8+
+- pip installed
 
-### 3. Create a Virtual Environment (Recommended)
+### 3. Create a Virtual Environment 
 
 ```bash
 # Create virtual environment
