@@ -33,7 +33,6 @@ Unzip the project folder and open it in your IDE or terminal.
 
 ### 2. Prerequisites
 - Python **3.8+**
-- `pip` installed
 
 ### 3. Create a Virtual Environment (Recommended)
 
