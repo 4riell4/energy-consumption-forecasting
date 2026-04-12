@@ -32,13 +32,20 @@ if page == "Home":
     st.title("The Energy Demand Forecaster")
     
     st.markdown("### Project Details")
-    st.write("**Student:** Ariella Amor")
+    st.write("Ariella Amor")
     st.write("**ID:** 220019040")
     st.write("**Course:** BSc Computer Science")
     
     st.markdown("---")
     st.markdown("### Project Aim")
-    st.write("This project focuses on building a tool to predict energy demand using modern data analytics and deep learning techniques. Being able to forecast demand accurately is important for managing the grid, reducing costs, and supporting sustainability efforts.")
+    st.markdown("### Project Aim")
+    st.write("""
+    For my project, I have trained and evaluated several different models, ranging from traditional statistical methods to deep learning, to forecast short-term energy consumption.
+    
+    My goal was to see how modern data analytics can tackle the complex, volatile patterns of actual grid demand. 
+
+    Finding more accurate ways to predict this demand is an important step toward improving grid management, reducing wasted electricity, and supporting broader sustainability goals.
+    """)
 
     st.markdown("---")
     st.markdown("### Model Overview")
@@ -74,9 +81,9 @@ elif page == "Generate Forecast":
                     })
                     st.bar_chart(data=forecast_data, x="Model", y="Predicted MW", color="#4C72B0")
                     c1, c2, c3 = st.columns(3)
-                    c1.metric("XGBoost", f"{res['xgb_prediction_mw']:,.2f} MW")
+                    c3.metric("XGBoost", f"{res['xgb_prediction_mw']:,.2f} MW")
                     c2.metric("LSTM", f"{res['lstm_prediction_mw']:,.2f} MW")
-                    c3.metric("ARIMA", f"{res['arima_prediction_mw']:,.2f} MW")
+                    c1.metric("ARIMA", f"{res['arima_prediction_mw']:,.2f} MW")
                     
                     st.markdown("### Explanation")
                     st.write("These predictions estimate the energy demand for the next 30-minute period. Each model works a bit differently: ARIMA follows simple trends, XGBoost focuses on recent patterns in the data, and LSTM looks at the full sequence to pick up more complex behaviour.")
@@ -123,14 +130,14 @@ elif page == "Data Analytics & Patterns":
         plot_forecast_window("xgb_preds.npy", "actual_values.npy", "XGBoost", "#32CD32")
     with col4:
         st.write("**Analysis:**")
-        st.write("Because it uses recent values as features, XGBoost responds more quickly to changes. You can see it follows the actual demand more closely, especially during sharp increases in the morning.")
+        st.write("XGBoost uses recent values as features, it responds more quickly to changes. You can see it follows the actual demand more closely, especially during sharp increases in the morning.")
     st.markdown("---")
 
     # LSTM
     st.markdown("### 3. LSTM: Deep Learning Sequence Performance (72-Hour Window)")
     col5, col6 = st.columns([2, 1])
     with col5:
-        plot_forecast_window("lstm_preds.npy", "actual_values.npy", "LSTM", "#FF00FF")
+        plot_forecast_window("lstm_preds.npy", "actual_values.npy", "LSTM", "#DB39B0")
     with col6:
         st.write("**Analysis:**")
         st.write("The LSTM does the best job at capturing patterns over time. It follows the smaller fluctuations more closely, especially during peak demand in the evening.")
@@ -191,9 +198,11 @@ elif page == "Model Evaluation":
 
         st.write("**Analysis of Metrics:**")
         st.write("""
-        The quantitative evaluation reveals a stark performance divide between traditional linear statistical methods and advanced non-linear algorithms. \n
-        Both XGBoost and LSTM achieved an approximate 96% reduction in error compared to the ARIMA baseline. \n
-        While XGBoost was slightly more accurate on average (lowest MAE), the LSTM achieved a superior RMSE, indicating it was marginally better at minimizing large deviations during extreme peak spikes.
+        When evaluating the metrics, I found a massive performance gap between the traditional statistical approach and the advanced machine learning algorithms. 
+        
+        My XGBoost and LSTM models both reduced the forecasting error by about 96% compared to the baseline ARIMA model. 
+        
+        Interestingly, while XGBoost gave me the best average accuracy overall (the lowest MAE), the LSTM model achieved a better RMSE score. This showed me that the deep learning LSTM was slightly better at handling and minimising those extreme, sudden spikes in peak energy demand.
         """)
 
     else:
@@ -220,9 +229,11 @@ elif page == "Model Evaluation":
         
         st.write("**Analysis of Forecast Behavior:**")
         st.write("""
-        Visual inspection of the 72-hour window reinforces the quantitative metrics. \n
-        The ARIMA model (Blue) establishes a central trajectory but completely fails to anticipate daily human energy cycles, rapidly smoothing into a flattened mean. \n
-        Conversely, both XGBoost (Green) and LSTM (Magenta) successfully track the non-linear trend, adhering precisely to high-frequency evening peaks and early morning troughs.
+        Looking at the 72-hour forecast graph really brings those performance numbers to life. 
+        
+        You can clearly see that the baseline ARIMA model (the blue line) just flattens out around the average—it completely misses the natural, daily rhythm of human energy use. 
+        
+        On the other hand, my XGBoost (Green) and LSTM (Magenta) models do an excellent job following the real, complex trends. They accurately catch both the sharp spikes in evening demand and the quiet early morning dips.
         """)
     else:
         st.warning("One or more prediction files (.npy) are missing. Unable to generate comparison plot.")
@@ -238,10 +249,6 @@ elif page == "Model Evaluation":
 
 
 
-"""
-References:
-  https://docs.streamlit.io/
-  https://www.youtube.com/watch?v=p2pXpcXPoGk
-  https://medium.com/@verinamk/streamlit-for-beginners-build-your-first-dashboard-58b764a62a2d
-
-"""
+#References:
+#https://www.youtube.com/watch?v=p2pXpcXPoGk
+#https://medium.com/@verinamk/streamlit-for-beginners-build-your-first-dashboard-58b764a62a2d
