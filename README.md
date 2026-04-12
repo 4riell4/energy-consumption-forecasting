@@ -18,12 +18,10 @@ The repository is organised exactly as follows:
 
 - `api/` — Contains the Flask REST API backend application serving the model inference.  
 - `data/` — Contains the raw and processed historical datasets used to train and evaluate the models.  
-- `models/` — Stores the trained models (XGBoost, LSTM), data scalers, and their specific training notebooks.
+- `models/` — Stores the trained models, data scalers, and their specific training notebooks.
 - `notebooks/` — Contains the core research pipeline Jupyter notebooks (exploratory data analysis, feature engineering, and model evaluation).  
 - `results/` — Holds the exported output metrics (`.json`), prediction arrays (`.npy`), and visual assets used dynamically by the frontend dashboard.  
-- `venv/` — The local Python virtual environment containing the project's dependencies (generated locally).
 - `dashboard.py` — The Streamlit frontend application.  
-- `requirements.txt` — A comprehensive list of all required Python packages and their exact versions.  
 - `test_api.py` — A script to verify the Flask API endpoints independently without the UI.
 
 ## Installation Instructions
