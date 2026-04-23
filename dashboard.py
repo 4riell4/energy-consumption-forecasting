@@ -29,7 +29,7 @@ page = st.sidebar.radio(
 
 # PAGE: HOME
 if page == "Home":
-    st.title("The Energy Demand Forecaster")
+    st.title("The Energy Consumption Forecaster")
     
     st.markdown("### Project Details")
     st.write("Ariella Amor")
@@ -57,7 +57,7 @@ if page == "Home":
 
 # PAGE: GENERATE FORECAST
 elif page == "Generate Forecast":
-    st.title("Generate a Multi-Model Forecast")
+    st.title("Generate Forecast")
     
     with st.expander("How to use this page"):
         st.write("Input exactly 48 comma-separated values representing the last 24 hours of demand (MW). The models will predict the 49th value.")
