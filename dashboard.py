@@ -6,7 +6,7 @@ import os
 import json
 from PIL import Image
 
-st.set_page_config(page_title="Energy Forecaster", layout="wide")
+st.set_page_config(page_title="Energy Consumption Forecasting", layout="wide")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.join(BASE_DIR, "results")
@@ -37,7 +37,6 @@ if page == "Home":
     st.write("**Course:** BSc Computer Science")
     
     st.markdown("---")
-    st.markdown("### Project Aim")
     st.markdown("### Project Aim")
     st.write("""
     For my project, I have trained and evaluated several different models, ranging from traditional statistical methods to deep learning, to forecast short-term energy consumption.
